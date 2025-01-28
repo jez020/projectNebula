@@ -14,9 +14,10 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import * as storage from 'electron-json-storage';
+// import validateStorage from './intefaceDefs/storage';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-
 
 // ! Checking for updates
 class AppUpdater {
@@ -26,7 +27,6 @@ class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
 
 // Defines the mainWindow variable
 let mainWindow: BrowserWindow | null = null;
@@ -87,7 +87,18 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(resolveHtmlPath('index.html'));
+  const discordApiData = storage.getSync('discordApiData') as {
+    access_token?: string;
+  };
+
+  // Change the bang after the if statement to the path to
+  // the discord login page.
+  // Checks if user is logged in. If not, redirect to login page.
+  if (discordApiData.access_token !== undefined) {
+    // Replace with path to discord login.
+  } else {
+    mainWindow.loadURL(resolveHtmlPath('index.html'));
+  }
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
